@@ -50,8 +50,10 @@ services:
     env_file: .env.production
     command: bash -c "rm -f /mastodon/tmp/pids/server.pid; bundle exec rails s -p 3000"
     networks:
-      - external_network
-      - internal_network
+      external_network:
+        aliases:
+          - mastodon
+      internal_network:
     healthcheck:
       test: ["CMD-SHELL", "wget -q --spider --proxy=off localhost:3000/health || exit 1"]
     ports:
@@ -116,5 +118,7 @@ services:
 
 networks:
   external_network:
+    external: true
+    name: website
   internal_network:
     internal: true
